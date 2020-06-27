@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import styles from './Quiz.module.css'
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz'
+import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
 
 class Quiz extends Component {
   state = {
+    isFinished: true,
     activeQuestion: 0,
     answerState: null,
     quiz: [
@@ -65,7 +67,13 @@ class Quiz extends Component {
   }
 
   onAnswerClickHandler = answerId => {
-    console.log(answerId);
+    if (this.state.answerState) {
+      const keys = Object.keys(this.state.answerState);
+      const key = keys[0];
+      if (this.state.answerState[key] === 'success') {
+        return
+      }
+    }
 
     const question = this.state.quiz[this.state.activeQuestion];
 
@@ -76,7 +84,9 @@ class Quiz extends Component {
 
       const timeout = window.setTimeout(() => {
         if (this.isQuizFinished()) {
-          console.log('finished')
+          this.setState({
+            isFinished: true,
+          })
         } else {
           this.setState({
             activeQuestion: this.state.activeQuestion + 1,
@@ -98,16 +108,20 @@ class Quiz extends Component {
       <div className={styles.Quiz}>
         <h1>Answer the Questions</h1>
 
-        <div className={styles.QuizWrapper}>
-          <ActiveQuiz
-            answers={this.state.quiz[this.state.activeQuestion].answers}
-            question={this.state.quiz[this.state.activeQuestion].question}
-            quizLength={this.state.quiz.length}
-            answerNumber={this.state.activeQuestion + 1}
-            state={this.state.answerState}
-            onAnswerClick={this.onAnswerClickHandler}
-          />
-        </div>
+        {
+          this.state.isFinished
+          ? <FinishedQuiz />
+            : <div className={styles.QuizWrapper}>
+              <ActiveQuiz
+                answers={this.state.quiz[this.state.activeQuestion].answers}
+                question={this.state.quiz[this.state.activeQuestion].question}
+                quizLength={this.state.quiz.length}
+                answerNumber={this.state.activeQuestion + 1}
+                state={this.state.answerState}
+                onAnswerClick={this.onAnswerClickHandler}
+              />
+            </div>
+        }
       </div>
     )
   }
