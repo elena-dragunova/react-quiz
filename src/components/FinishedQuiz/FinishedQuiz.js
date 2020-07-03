@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './FinishedQuiz.module.css'
 import Button from '../UI/Button/Button'
+import { Link } from 'react-router-dom'
 
 const FinishedQuiz = props => {
 
@@ -40,11 +41,11 @@ const FinishedQuiz = props => {
           Repeat
         </Button>
 
-        <Button
-          type='success'
-        >
-          Go to Quizzes List
-        </Button>
+        <Link to={'/'}>
+          <Button type='success'>
+            Go to Quizzes List
+          </Button>
+        </Link>
       </div>
     </div>
   )
